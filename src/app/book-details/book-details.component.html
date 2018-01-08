@@ -1,0 +1,110 @@
+<div class="book-details-wrap">
+    <h1>Book Details</h1>
+
+<form [formGroup]="form" (ngSubmit)="addBook()" enctype="multipart/form-data">
+        <div class="form-group d-sm-none">
+                <label for="book_id">Book id</label>
+                  <input 
+                    formControlName="book_id"         
+                    type="text" 
+                    class="form-control"/>
+                   
+              </div>
+    <div class="form-group">
+        <label for="book_name">Book Name</label>
+          <input 
+            formControlName="book_name"         
+            type="text" 
+            class="form-control"/>
+            <div class="alert alert-danger" *ngIf="book_name.touched && book_name.invalid">Book Name Cannot be empty</div>
+      </div>
+      <div class="form-group">
+          <label for="author">Author</label>        
+             <select  id="author"
+             formControlName="author"
+              class="form-control">
+                <option *ngFor="let author of authors" value={{author.author_id}}>{{author.author_name}}</option>
+            </select>
+
+             <div class="alert alert-danger" *ngIf="author.touched && author.invalid">Author Name Cannot be empty</div>
+        </div>
+        <div class="form-group">
+            <label for="category"> Category</label>
+              
+              <select  id="category" 
+              formControlName="category" 
+              class="form-control">
+                 <option *ngFor="let category of categories " value={{category.category_id}}>{{category.category_name}}</option>
+             </select>
+              <div class="alert alert-danger" *ngIf="category.touched && category.invalid">Category Name Cannot be empty</div>
+          </div>
+          <div class="form-group">
+              <label for="publication">Publication</label>              
+                   <select
+                     id="publication"
+                   formControlName="publication"
+                     class="form-control">
+                      <option *ngFor="let publication of publications" value={{publication.publication_id}}>{{publication.publication_name}}</option>
+                  </select>
+                   <div class="alert alert-danger" *ngIf="publication.touched && publication.invalid">Publication Name Cannot be empty</div>
+            </div>
+            <div class="form-group">
+                <label for="description"> Description</label>
+                  <textarea 
+                  id="description"
+                   formControlName="description" 
+                   type="text" 
+                   class="form-control"
+                   rows="3">  </textarea>              
+              </div>
+              <div class="form-group">
+                  <label for="yop">Year Of Publication </label>
+                    <input
+                     id="yop" 
+                     formControlName="yop"
+                     type="text" 
+                     class="form-control"/>    
+                     <div *ngIf="yop.pending">Checking....</div>
+                     <div class="alert alert-danger" *ngIf="yop.touched && yop.invalid">
+                         <div *ngIf="yop.errors.required">Year of Publication Cannot be empty</div>
+                         <div *ngIf="yop.errors.minlength || yop.errors.maxlength">Year of Publication should be 4</div>
+                         <div *ngIf="yop.errors.cannotContainSpace">Year of publication cannot contain space</div>
+                         <div *ngIf="yop.errors.isGreaterThanCurrentYear">YOP Greater than this year</div>
+
+                     </div>         
+                </div>
+                <div class="form-group">
+                    <label for="price">Price </label>
+                      <input 
+                      id="price"
+                       formControlName="price"
+                        type="text"
+                        class="form-control"/>  
+                        <div class="alert alert-danger" *ngIf="price.touched && price.invalid">Price Cannot be empty</div>           
+                  </div>
+                  <!-- <div class="form-group">
+                      <label for="thumb_url"> Thumbnail URL</label>
+                        <input 
+                        id="thumb_url" 
+                        formControlName="thumb_url"  
+                        type="text" 
+                        class="form-control"/>  
+                        <div class="alert alert-danger" *ngIf="thumb_url.touched && thumb_url.invalid">Thumbnail url Cannot be empty</div>           
+                    </div> -->
+                    <div class="form-group"> 
+                         <label for="thumb_url"> Thumbnail URL</label>
+                        <input 
+                        type="file" 
+                        class="form-control-file" 
+                        id="thumb_url" (change)="onFileChange($event)" >
+                        <!-- <div class="alert alert-danger" *ngIf="thumb_url.touched && thumb_url.invalid">Thumbnail url Cannot be empty</div> -->
+                      </div>
+                    <div class="form-group text-right">
+                        
+                       <button class="btn btn-warning"> Cancel</button>      
+                       <button class="btn btn-danger"> Reset</button> 
+                       <button class="btn btn-primary" type="submit"> Save</button> 
+                      </div>
+</form>
+
+</div>

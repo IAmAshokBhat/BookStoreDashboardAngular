@@ -1,0 +1,52 @@
+<div class="categories-list">
+    <h1>Categories List    <button type="button" class="btn btn-primary float-right" (click)="open(content)">Add new</button></h1>
+    <div class="d-flex">
+       <div class="card-columns" ngbPopover="Click on card to edit" triggers="mouseenter:mouseleave" >
+          <div 
+            class="card border-secondary mb-3"
+            style="max-width: 18rem;" 
+            *ngFor="let category of categories"
+            style="max-width: 18rem;"
+            (click)="editCategoryPopUp(category)">
+             <div class="card-body text-secondary">
+                <span class="delete text-danger" (click)="delete($event,category.category_id)"><fa name="window-close"></fa></span>
+                <h5 class="card-title">{{category.category_name}}</h5>
+            </div>
+          </div>
+       </div>
+
+       <ng-template #content let-c="close" let-d="dismiss">
+          <div class="modal-header">
+             <h4 class="modal-title">Add Category</h4>
+             <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+             <span aria-hidden="true">&times;</span>
+             </button>
+          </div>
+          <div class="modal-body">
+                <form (ngSubmit)="addCategory()" [formGroup]="form"  >
+                    <div class="form-group">
+                        <label >Category name</label>
+                        <input
+                         type="text"
+                         formControlName="category_name" 
+                         class="form-control" 
+                         id="category_name"  
+                         placeholder="Enter category name"
+                         required> 
+                        <div class="alert alert-danger" *ngIf="category_name.touched && category_name.invalid" role="alert">
+                               Category name is mandatory!
+                        </div>                       
+                    </div> 
+                    <div class="text-right actions-wrap">                       
+                        <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
+                        <button type="submit" class="btn btn-primary" [disabled]="!form.valid">Add</button>
+                    </div>
+                </form>
+          </div>
+          
+       </ng-template>
+       <div [hidden]="!loader" class="loader" > 
+            <img src="/assets/loading.gif" />
+       </div>
+    </div>
+ </div>

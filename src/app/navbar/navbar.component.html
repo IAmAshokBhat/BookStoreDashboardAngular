@@ -1,0 +1,28 @@
+ 
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+          <div class="container"> 
+        <a class="navbar-brand" href="#">CMS</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+    
+          <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item "  [routerLinkActive]="['active']" >
+                <a class="nav-link" routerLink="/">Books <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item" [routerLinkActive]="['active']">
+                <a class="nav-link" routerLink="/categories" >Categories</a>
+              </li>
+              
+              <li class="nav-item" [routerLinkActive]="['active']">
+                  <a class="nav-link" routerLink="/authors" >Authors</a>
+                </li>
+                <li class="nav-item" [routerLinkActive]="['active']">
+                    <a class="nav-link" routerLink="/publications" >Publications</a>
+                  </li>
+            </ul>
+           
+          </div>
+        </div>
+        </nav>

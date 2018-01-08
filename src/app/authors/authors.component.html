@@ -1,0 +1,58 @@
+<div class="author-list">
+   <div class="d-flex">
+      <div class=" col-md-12 pl-0">
+         <h1>Author List <button type="button" class="btn btn-primary float-right" (click)="open(content)">Add new</button></h1>
+      </div>
+    </div>
+      <div class="card-columns">
+         <div 
+         (click)="editAuthorPopUp(author)"
+          class="card border-secondary mb-3" 
+          style="max-width: 18rem;"
+          *ngFor="let author of authors"
+           style="max-width: 18rem;">
+            <div class="card-body text-secondary">
+             <span class="delete text-danger" (click)="delete($event,author.author_id)"><fa name="window-close"></fa></span>
+               <h5 class="card-title">{{author.author_name}}</h5>
+               
+            </div>
+         </div>
+      </div>
+      <ng-template #content let-c="close" let-d="dismiss">
+          <div class="modal-header">
+             <h4 class="modal-title">Add Author</h4>
+             <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+             <span aria-hidden="true">&times;</span>
+             </button>
+          </div>
+          <div class="modal-body">
+                <form (ngSubmit)="addAuthor()" [formGroup]="form"  >
+                    <div class="form-group">
+                        <label >Author name</label>
+                        <input
+                         type="text"
+                         formControlName="author_name" 
+                         class="form-control" 
+                         id="author_name"  
+                         placeholder="Enter author name"
+                         required> 
+                        <div 
+                            class="alert alert-danger"
+                            *ngIf="author_name.touched && author_name.invalid"
+                            role="alert">
+                               Author name is mandatory!
+                        </div>                       
+                    </div> 
+                    <div class="text-right actions-wrap">                       
+                        <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
+                        <button type="submit" class="btn btn-primary" [disabled]="!form.valid">Add</button>
+                    </div>
+                </form>
+          </div>
+          
+       </ng-template>
+
+       <div [hidden]="!loader" class="loader" > 
+        <img src="/assets/loading.gif" />
+   </div>
+</div>

@@ -1,0 +1,21 @@
+
+<div class="book-list">
+  <div class="col-md-12 pl-0"><h1><span>Book List </span> <a routerLink="/book/-1" class="text-right pull-right btn btn-primary " >Add New</a></h1></div>
+    <div class="d-flex">
+        <div class="card-columns">
+  <div class="" *ngFor="let book of bookList">
+      <a [routerLink]="['book', book.book_id]" class="wrapper-link">
+        <div class="card mb-3" >
+          <img class="card-img-top" src={{book.thumb_url}} alt={{book.book_name}}>
+          <div class="card-body">
+            <h5 class="card-title">{{book.book_name}}</h5>
+            <p class="card-text">{{book.description}}</p>
+          </div>    
+        </div></a>
+    </div>
+  </div>
+</div>
+
+
+ 
+</div>
