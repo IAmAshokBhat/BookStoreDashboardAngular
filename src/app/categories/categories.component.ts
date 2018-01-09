@@ -19,10 +19,12 @@ export class CategoriesComponent implements OnInit {
   modelRef;
   form;
   category;
+  deleteModelRef;
   loader = false;
+  deleteId = -1;
 
   @ViewChild('content') private content;
-
+  @ViewChild('deleteConfirmation') private deleteConfirmation;
   constructor(
     private service:CategoriesService,
     private modalService: NgbModal) { }
@@ -40,7 +42,13 @@ export class CategoriesComponent implements OnInit {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
-
+  confirmModalOpen(content) {
+    this.deleteModelRef = this.modalService.open(content,{keyboard:false} );    
+    this.deleteModelRef.result.then((result) => {        
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
   private getDismissReason(reason: any): string {
     this.category = {"category_id":"-1","category_name":""};
     (this.form as NgForm).setValue(this.category);
@@ -113,14 +121,17 @@ export class CategoriesComponent implements OnInit {
     (this.form as NgForm).setValue(category);
     this.open(this.content);
   }
-
-  delete(event : Event,id){
+  delete(event:Event,id){
+    event.stopImmediatePropagation();  
+     this.confirmModalOpen(this.deleteConfirmation);
+     this.deleteId = id;    
+  }
+  deleteConfirmed(){
     this.loader = true;
-    event.stopImmediatePropagation();
-    this.service.delete("http://bookstore-trial.herokuapp.com/api/category?category_id="+id)
-        .subscribe(()=>{
-          this.fetchCategories();
-          this.modelRef.close()
-        })
+    this.service.delete("http://bookstore-trial.herokuapp.com/api/category?category_id="+this.deleteId)
+    .subscribe(()=>{
+      this.fetchCategories();
+      this.deleteModelRef.close()
+    })
   }
 }

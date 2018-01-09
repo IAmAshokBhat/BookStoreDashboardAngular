@@ -1,5 +1,5 @@
 import { NgForm } from '@angular/forms/src/directives/ng_form';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, ModalDismissReasons, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NotFoundError } from './../common/not-found-error';
 import { Component, OnInit, Injectable, ViewChild } from '@angular/core';
@@ -18,9 +18,12 @@ export class AuthorsComponent implements OnInit {
   form;
   closeResult: string;
   modelRef;
+  deleteModelRef;
   loader = false;
+  deleteAuthorId = -1;
 
   @ViewChild('content') private content;
+  @ViewChild('deleteConfirmation') private deleteConfirmation;
   constructor(
     private service: AuthorService,
     private modalService: NgbModal) {
@@ -96,6 +99,17 @@ export class AuthorsComponent implements OnInit {
     });
   }
 
+  confirmModalOpen(content) {
+    this.deleteModelRef = this.modalService.open(content,{keyboard:false} );
+    
+    this.deleteModelRef.result.then((result) => {
+    
+     
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
   private getDismissReason(reason: any): string {
     this.author = {"author_id":"-1","author_name":""};
     (this.form as NgForm).setValue(this.author);
@@ -114,13 +128,19 @@ export class AuthorsComponent implements OnInit {
   }
 
   delete(event:Event,id){
-    event.stopImmediatePropagation();
-    this.loader = true;
-    this.service.delete("http://bookstore-trial.herokuapp.com/api/author?author_id="+id)
-        .subscribe(()=>{
-          this.fetchAuthors();
-          this.modelRef.close()
-        })
+    event.stopImmediatePropagation();  
+     this.confirmModalOpen(this.deleteConfirmation);
+     this.deleteAuthorId = id;    
+  }
+
+  deleteConfirmed(){
+      this.loader = true;
+      this.service.delete("http://bookstore-trial.herokuapp.com/api/author?author_id="+this.deleteAuthorId)
+      .subscribe(()=>{
+        this.fetchAuthors();
+        this.deleteModelRef.close()
+      });
+    
   }
 
 }

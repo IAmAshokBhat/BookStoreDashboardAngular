@@ -2,7 +2,8 @@
     <h1>Book Details</h1>
 
 <form [formGroup]="form" (ngSubmit)="addBook()" enctype="multipart/form-data">
-        <div class="form-group d-sm-none">
+    <div class="form-row">
+        <div class="form-group d-sm-none ">
                 <label for="book_id">Book id</label>
                   <input 
                     formControlName="book_id"         
@@ -10,7 +11,7 @@
                     class="form-control"/>
                    
               </div>
-    <div class="form-group">
+    <div class="form-group col-md-4">
         <label for="book_name">Book Name</label>
           <input 
             formControlName="book_name"         
@@ -18,7 +19,7 @@
             class="form-control"/>
             <div class="alert alert-danger" *ngIf="book_name.touched && book_name.invalid">Book Name Cannot be empty</div>
       </div>
-      <div class="form-group">
+      <div class="form-group col-md-4">
           <label for="author">Author</label>        
              <select  id="author"
              formControlName="author"
@@ -28,7 +29,7 @@
 
              <div class="alert alert-danger" *ngIf="author.touched && author.invalid">Author Name Cannot be empty</div>
         </div>
-        <div class="form-group">
+        <div class="form-group col-md-4">
             <label for="category"> Category</label>
               
               <select  id="category" 
@@ -38,7 +39,7 @@
              </select>
               <div class="alert alert-danger" *ngIf="category.touched && category.invalid">Category Name Cannot be empty</div>
           </div>
-          <div class="form-group">
+          <div class="form-group col-md-4">
               <label for="publication">Publication</label>              
                    <select
                      id="publication"
@@ -48,16 +49,17 @@
                   </select>
                    <div class="alert alert-danger" *ngIf="publication.touched && publication.invalid">Publication Name Cannot be empty</div>
             </div>
-            <div class="form-group">
-                <label for="description"> Description</label>
-                  <textarea 
-                  id="description"
-                   formControlName="description" 
-                   type="text" 
-                   class="form-control"
-                   rows="3">  </textarea>              
+           
+              <div class="form-group col-md-4">
+                <label for="price">Price </label>
+                  <input 
+                  id="price"
+                   formControlName="price"
+                    type="text"
+                    class="form-control"/>  
+                    <div class="alert alert-danger" *ngIf="price.touched && price.invalid">Price Cannot be empty</div>           
               </div>
-              <div class="form-group">
+              <div class="form-group col-md-4">
                   <label for="yop">Year Of Publication </label>
                     <input
                      id="yop" 
@@ -73,14 +75,14 @@
 
                      </div>         
                 </div>
-                <div class="form-group">
-                    <label for="price">Price </label>
-                      <input 
-                      id="price"
-                       formControlName="price"
-                        type="text"
-                        class="form-control"/>  
-                        <div class="alert alert-danger" *ngIf="price.touched && price.invalid">Price Cannot be empty</div>           
+                <div class="form-group col-md-4">
+                    <label for="description"> Description</label>
+                      <textarea 
+                      id="description"
+                       formControlName="description" 
+                       type="text" 
+                       class="form-control"
+                       rows="3">  </textarea>              
                   </div>
                   <!-- <div class="form-group">
                       <label for="thumb_url"> Thumbnail URL</label>
@@ -91,20 +93,32 @@
                         class="form-control"/>  
                         <div class="alert alert-danger" *ngIf="thumb_url.touched && thumb_url.invalid">Thumbnail url Cannot be empty</div>           
                     </div> -->
-                    <div class="form-group"> 
-                         <label for="thumb_url"> Thumbnail URL</label>
+                    <div class="form-group col-md-4"> 
+                         
+                       
+                        <!-- <div class="alert alert-danger" *ngIf="thumb_url.touched && thumb_url.invalid">Thumbnail url Cannot be empty</div> -->
+                        <div *ngIf="book.thumb_url">
+                          
+                            <img [src]="book.thumb_url" width="100"/>
+                            <button type="button" class="btn btn-secondary" (click)="toggleFileSelector()">Change</button>
+                        </div>
+                          <label *ngIf="showFileSelector" for="thumb_url">Thumbnail </label>
                         <input 
                         type="file" 
                         class="form-control-file" 
-                        id="thumb_url" (change)="onFileChange($event)" >
-                        <!-- <div class="alert alert-danger" *ngIf="thumb_url.touched && thumb_url.invalid">Thumbnail url Cannot be empty</div> -->
-                      </div>
-                    <div class="form-group text-right">
+                        id="thumb_url"
+                        (change)="onFileChange($event)" 
+                        *ngIf="showFileSelector">
+                    </div>
+                    <div class="form-group col-md-12 text-right">
                         
-                       <button class="btn btn-warning"> Cancel</button>      
-                       <button class="btn btn-danger"> Reset</button> 
-                       <button class="btn btn-primary" type="submit"> Save</button> 
+                       <button class="btn btn-warning" type="button"> Cancel</button>      
+                       <button class="btn btn-danger" type="button"> Reset</button> 
+                       <button class="btn btn-primary" type="submit" > Save</button> 
                       </div>
+                    </div>
 </form>
-
+<div [hidden]="!loader" class="loader" > 
+    <img src="/assets/loading.gif" />
+</div>
 </div>

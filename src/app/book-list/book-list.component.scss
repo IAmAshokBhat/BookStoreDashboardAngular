@@ -1,0 +1,28 @@
+.book-list .col-md-2:nth-child(7){
+    clear: left;
+}
+h5,p{
+  font-size: 14px;
+}
+.card-img-top{
+  max-height: 300px;
+}
+.card-body{
+  min-height: 147px;
+}
+@media only screen and (min-width: 480px) {
+  .card-columns {
+    column-count: 1;
+  }
+}
+@media only screen and (min-width: 767px) {
+  .card-columns {
+    column-count: 3;
+  }
+}
+  @media only screen and (min-width: 991px) {
+    .card-columns {
+      column-count: 5;
+    }
+}
+

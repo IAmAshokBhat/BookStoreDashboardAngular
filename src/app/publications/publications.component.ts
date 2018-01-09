@@ -18,8 +18,12 @@ export class PublicationsComponent implements OnInit {
   form;
   modelRef;
   closeResult: string;
-  loader;
+  deleteModelRef;
+  loader = false;
+  deleteId = -1;
+
   @ViewChild('content') private content;
+  @ViewChild('deleteConfirmation') private deleteConfirmation;
   constructor(
     private service: PublicationService,
     private modalService: NgbModal) { }
@@ -87,7 +91,13 @@ export class PublicationsComponent implements OnInit {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
-
+  confirmModalOpen(content) {
+    this.deleteModelRef = this.modalService.open(content,{keyboard:false} );    
+    this.deleteModelRef.result.then((result) => {        
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
   private getDismissReason(reason: any): string {
     this.publication = {"publication_id":"-1","publication_name":""};
     (this.form as NgForm).setValue(this.publication);
@@ -107,14 +117,19 @@ export class PublicationsComponent implements OnInit {
     this.open(this.content);
   }
 
-  delete(event: Event,id){
-    this.loader = true;
-    event.stopImmediatePropagation();
-
-    this.service.delete("http://bookstore-trial.herokuapp.com/api/publication?publication_id="+id)
-        .subscribe(()=>{
-          this.fetchPublishers();
-          this.modelRef.close()
-        })
+  delete(event:Event,id){
+    event.stopImmediatePropagation();  
+     this.confirmModalOpen(this.deleteConfirmation);
+     this.deleteId = id;    
   }
+
+  deleteConfirmed(){
+    this.loader = true;
+    this.service.delete("http://bookstore-trial.herokuapp.com/api/publication?publication_id="+this.deleteId)
+    .subscribe(()=>{  
+       this.fetchPublishers();
+      this.deleteModelRef.close()
+    })
+  }
+
 }

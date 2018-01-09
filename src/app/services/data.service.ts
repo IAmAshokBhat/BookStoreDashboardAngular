@@ -11,10 +11,14 @@ import { NotFoundError } from '../common/not-found-error';
 @Injectable()
 export class DataService {
   private headers = new Headers({
-    // 'Content-Type': 'application/json',
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.ZW1haWxAbm9lbWFpbC5jb20.fGbjTahMFHe9Ad330JH5HfkhNuP4FdXICuQHgKS9Xag'		
+  });
+  private headersFormData = new Headers({
     'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.ZW1haWxAbm9lbWFpbC5jb20.fGbjTahMFHe9Ad330JH5HfkhNuP4FdXICuQHgKS9Xag'		
   });
   private options = new RequestOptions({ headers: this.headers });
+  private optionsFormData = new RequestOptions({ headers: this.headersFormData });
 
   constructor(private http:Http,public url:string) { }
 
@@ -40,8 +44,18 @@ export class DataService {
     .catch(this.handleError);
   }
 
+  createWithFormData(url, formData){
+    return this.http.post(url,formData,this.optionsFormData)
+    .map(response => response.json())
+    .catch(this.handleError);
+  }
   update(url, resource){
     return this.http.put(url,resource,this.options)
+    .map(response => response.json())
+    .catch(this.handleError);
+  }
+  updateWithFormData(url, formData){
+    return this.http.put(url,formData,this.optionsFormData)
     .map(response => response.json())
     .catch(this.handleError);
   }

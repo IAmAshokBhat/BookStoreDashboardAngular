@@ -48,9 +48,23 @@
                         <button type="submit" class="btn btn-primary" [disabled]="!form.valid">Add</button>
                     </div>
                 </form>
-          </div>
+          </div>        
           
        </ng-template>
+
+       <ng-template #deleteConfirmation  let-c="close" >
+        <div class="modal-header">
+           <h4 class="modal-title">Are you sure?</h4>         
+        </div>
+        <div class="modal-body">
+            This action cannot be undone, Confirm delete?
+            <div class="text-right actions-wrap">      
+                <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Cancel</button>
+                <button type="submit" class="btn btn-danger" (click)=deleteConfirmed() >Delete</button>
+            </div>
+        </div>
+        
+     </ng-template>
 
        <div [hidden]="!loader" class="loader" > 
         <img src="/assets/loading.gif" />

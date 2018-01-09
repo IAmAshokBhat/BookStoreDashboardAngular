@@ -22,6 +22,8 @@ export class BookDetailsComponent implements OnInit {
   authors;
   publications;
   categories;
+  loader = false;
+  showFileSelector = false;
 
   constructor(
     private authorService: AuthorService,
@@ -61,6 +63,7 @@ export class BookDetailsComponent implements OnInit {
     }
 
   ngOnInit(){
+    this.loader = true;
     this.authorService.get().subscribe(authors => this.authors = authors);
     this.categoryService.get().subscribe(categories => this.categories = categories);
     this.publicationService.get().subscribe(publications => this.publications = publications );
@@ -68,7 +71,8 @@ export class BookDetailsComponent implements OnInit {
       let specificBookUrl = "http://bookstore-trial.herokuapp.com/api/getBookWithId?bookId=" + params.get('id');   
       if(params.get('id') != '-1'){
         this.bookService.getWithId(specificBookUrl)
-        .subscribe(book => {         
+        .subscribe(book => {  
+                this.loader = false;       
                 this.book = book[0];
                 this.form = new FormGroup({
                   "book_id": new FormControl(this.book.book_id),
@@ -91,6 +95,9 @@ export class BookDetailsComponent implements OnInit {
               throw error;
             } 
           });
+      }else{
+        this.loader = false;  
+        this.showFileSelector = true;
       }    
    
     })
@@ -114,15 +121,16 @@ export class BookDetailsComponent implements OnInit {
   }
   get price(){
     return this.form.get('price');
-  } get thumb_url(){
+  } 
+  get thumb_url(){
     return this.form.get('thumb_url');
   }
 
   addBook(){
     console.log(this.form.value);
-    const formModel = this.prepareSave();
+    const formModel:FormData = this.prepareSave();
     console.log(formModel);
-  
+     this.loader = true;
     let updatedBook = {      
     "book_name": this.form.value.book_name,
       "author_id": this.form.value.author,
@@ -138,8 +146,9 @@ export class BookDetailsComponent implements OnInit {
     this.route.paramMap.subscribe(params => { 
       if(params.get("id") != "-1"){
        // updatedBook['book_id'] = this.form.value.book_id,
-        this.bookService.update("http://bookstore-trial.herokuapp.com/api/book",formModel)
-        .subscribe(response => console.log(response),
+       formModel.append('book_id', this.form.get('book_id').value);
+        this.bookService.updateWithFormData("http://bookstore-trial.herokuapp.com/api/book",formModel)
+        .subscribe(response => {console.log(response) ;  this.loader = false;},
           (error:AppError) =>{
             if(error instanceof NotFoundError){
               console.log("404 in book get");
@@ -151,13 +160,15 @@ export class BookDetailsComponent implements OnInit {
           });  
       }else{
 
-        this.bookService.create("http://bookstore-trial.herokuapp.com/api/book",formModel)
+        this.bookService.createWithFormData("http://bookstore-trial.herokuapp.com/api/book",formModel)
         .subscribe(response =>{
           if(response.status == 1){
-            this.router.navigate(['/books'])
+            this.router.navigate(['/']);
+            this.loader = false;
           }
         },
           (error:AppError) =>{
+            this.loader = false;
             if(error instanceof NotFoundError){
               console.log("404 in book get");
             }else if(error instanceof BadInput){
@@ -174,7 +185,6 @@ export class BookDetailsComponent implements OnInit {
   }
 
   onFileChange(event) {
-    console.log(event.target.files)
     if(event.target.files.length > 0) {
       let file = event.target.files[0];
       this.form.get('thumb_url').setValue(file);
@@ -183,18 +193,6 @@ export class BookDetailsComponent implements OnInit {
 
   private prepareSave(): any {
     let input = new FormData();
-    // This can be done a lot prettier; for example automatically assigning values by looping through `this.form.controls`, but we'll keep it as simple as possible here
-   
-    // let updatedBook = {      
-    //   "book_name": this.form.value.book_name,
-    //     "author_id": this.form.value.author,
-    //     "category_id": this.form.value.category,
-    //     "publication_id": this.form.value.publication,
-    //     "yop": this.form.value.yop.toString(),
-    //     "description": this.form.value.description,
-    //     "price":this.form.value.price,
-    //     "thumb_url":this.form.value.thumb_url
-    //   };
     input.append('book_name', this.form.get('book_name').value);
     input.append('author_id', this.form.get('author').value);
     input.append('category_id', this.form.get('category').value);
@@ -204,5 +202,9 @@ export class BookDetailsComponent implements OnInit {
     input.append('price', this.form.get('price').value);
     input.append('thumb_url', this.form.get('thumb_url').value);
     return input;
+  }
+
+  toggleFileSelector(){
+    this.showFileSelector = true;
   }
 }

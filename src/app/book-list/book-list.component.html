@@ -3,19 +3,34 @@
   <div class="col-md-12 pl-0"><h1><span>Book List </span> <a routerLink="/book/-1" class="text-right pull-right btn btn-primary " >Add New</a></h1></div>
     <div class="d-flex">
         <div class="card-columns">
-  <div class="" *ngFor="let book of bookList">
+  <div class="card mb-3" *ngFor="let book of bookList">
       <a [routerLink]="['book', book.book_id]" class="wrapper-link">
-        <div class="card mb-3" >
+        <div class="" >
           <img class="card-img-top" src={{book.thumb_url}} alt={{book.book_name}}>
           <div class="card-body">
+              <span class="delete text-danger" (click)="delete($event,book.book_id)"><fa name="window-close"></fa></span>
             <h5 class="card-title">{{book.book_name}}</h5>
-            <p class="card-text">{{book.description}}</p>
+            <p class="card-text">{{book.description | shortDescription}}</p>
           </div>    
         </div></a>
     </div>
   </div>
 </div>
 
-
- 
+<ng-template #deleteConfirmation  let-c="close" >
+  <div class="modal-header">
+     <h4 class="modal-title">Are you sure?</h4>         
+  </div>
+  <div class="modal-body">
+      This action cannot be undone, Confirm delete?
+      <div class="text-right actions-wrap">      
+          <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Cancel</button>
+          <button type="submit" class="btn btn-danger" (click)=deleteConfirmed() >Delete</button>
+      </div>
+  </div>
+  
+</ng-template>
+<div [hidden]="!loader" class="loader" > 
+    <img src="/assets/loading.gif" />
+</div>
 </div>
